@@ -7,21 +7,15 @@
 FROM centos:centos7
 MAINTAINER d-theus https://github.com/d-theus
 
-RUN yum -y update; yum clean all
-RUN yum -y install epel-release tar ; yum clean all
-RUN yum -y install nginx ; yum clean all
-ADD server.crt /etc/ssl/certs/
-ADD server.key /etc/ssl/certs/
-RUN curl https://git.centos.org/sources/httpd/c7/acf5cccf4afaecf3afeb18c50ae59fd5c6504910 \
-    | tar -xz -C /usr/share/nginx/html \
-    --strip-components=1
-RUN sed -i -e 's/Apache/nginx/g' -e '/apache_pb.gif/d' \ 
-    /usr/share/nginx/html/index.html
+RUN yum -y update; yum -y install epel-release; yum clean all
+RUN yum -y install nginx; yum clean all
+
+VOLUME ["/etc/nginx", "/etc/ssl/certs"]
 
 EXPOSE 80
 EXPOSE 443
 
 # ADD nginx.conf /etc/nginx/nginx.conf
 
-# CMD [ "/usr/sbin/nginx" ]
+CMD [ "/usr/sbin/nginx" ]
 
